@@ -1,0 +1,55 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: z2dis2
+# 
+#         USAGE: ./z2dis2 
+# 
+#   DESCRIPTION: to give the comoving distance in Mpc 
+# 				form the input redshift $1 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: --- ~/astro/distance/comoving.dat
+#          BUGS: ---
+#         NOTES: --- h=0.71,OmigaL=0.73,Omigam=0.27: z2dis
+#         NOTES: --- h=0.71,OmigaL=0.7,Omigam=0.3 z2dis2
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 12/25/12 17:57:57 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+
+if [ $# -lt 1 ]; then
+	echo "please input the redshift"
+	exit 1
+fi
+
+z=$(echo "" | awk '{printf "%6.5f\n",'$1'}') # set the accuracy : 10^-5
+line=$(echo "" | awk '{printf "%s\n",1e+5*'$z'}')
+
+if [ $line -gt 1000000 ]; then
+	echo "please input a redshift < 10"
+	exit 1
+fi
+
+awk 'NR=='$line'{print $2}' ~/astro/distance/comoving2.dat
+
+
+
+
+exit
+
+
+
+awk 'NR==FNR{a[$'$c']=$'$c'}NR!=FNR{if($'$c'=a[$'$c'])print $0}' $1 $2
+exit
+#======================= my old code
+i=1
+for id in $(awk '{print $'$c'}' $2)
+do
+	awk '$'$c'=='$id'' $1
+	((i++))
+done

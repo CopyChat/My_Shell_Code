@@ -1,0 +1,47 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: cpf
+# 
+#         USAGE: ./cpf 
+# 
+#   DESCRIPTION: copy form the kla server 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: default: cp to the current directory
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/07/12 10:03:34 CST
+#      REVISION:  1.1
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+# scriptname cpto
+echo "--------------------------------------"
+#echo "cp FROM tangchao@202.121.49.52:~/..." 
+echo "cp FROM ctang@titan.univ.run... "
+echo "--------------------------------------"
+echo "Where is the file?"
+echo "--------------------------------------"
+read b
+#echo input $b
+echo "--------------------------------------"
+echo "To which directory ? (default = Current Directory)"
+echo "--------------------------------------"
+read a
+#echo input $a
+if [ -n "$a" ]  # :NOTE:10/10/12 16:02:41 CST:Tang: if a!=null return 1
+	then
+		echo download to $a
+#		scp tangchao@202.121.49.52:~/$b /Users/tang/$a # for kla
+		scp ctang@titan.univ.run:~/$b /Users/tang/$a # for le2p
+	else   # :NOTE:10/10/12 16:13:20 CST:Tang: default # for kla
+		a=$(pwd)
+#		scp ctang@202.121.49.52:~/$b $a 
+		scp ctang@titan.univ.run:~/$b $a # for le2p
+fi
+echo "--------------------------------------"
+exit

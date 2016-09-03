@@ -1,0 +1,12 @@
+#!/bin/bash
+# to del all the iterms in the ditectary
+direc=$(pwd) 
+for dir2del in $direc/* 
+do 
+ if [ -d $dir2del ]
+ then 
+  rm -rf $dir2del 
+ fi 
+done
+echo -----------------------------------
+echo [tangchao90908@163.com----100%done]

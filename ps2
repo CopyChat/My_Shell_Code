@@ -1,0 +1,10 @@
+#!/bin/bash
+# scriptname ps2
+# to run ps2pdf & open this pdf
+echo "--------------------------------------"
+ps2pdf $1 
+a=$(echo $1 | sed -e "s/.eps/.pdf/g") 
+# change .sm to .pdf and give this value to a
+echo $a
+open $a
+#echo ${#1} # get length of $1

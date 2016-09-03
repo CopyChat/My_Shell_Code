@@ -1,0 +1,27 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: superwc
+# 
+#         USAGE: ./superwc 
+# 
+#   DESCRIPTION:   use to show the number of lines & columns for a particular file
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/07/12 10:08:13 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+#set -x
+
+a=$(wc $1 | awk '{print $1}')
+b=$(wc $1 | awk '{print $2/$1}')
+c=$(wc $1 | awk '{print $2}')
+echo $a lines $b columns $c words: $1
+echo '-----------------------------------------'

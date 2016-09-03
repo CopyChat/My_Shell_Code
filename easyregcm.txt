@@ -1,0 +1,284 @@
+#!/bin/bash
+regdir=`pwd`
+
+#
+#Link the data
+# 
+linkdata()
+{
+echo
+echo -e "\t Choose your complier"
+echo "PGI3 (Portland Compiler)"
+echo "PGI5 (Portland Compiler)" 
+echo "IFC7 (Intel Compiler)"
+echo "IFC8 (Intel Compiler)" 
+echo -e "Enter: \c" ; read recons
+if [ "$recons" != "IFC8" ];then
+sed -e '93c\      parameter(ibyte=4)' PreProc/Terrain/domain.param > bak
+cp bak PreProc/Terrain/domain.param
+rm bak >& /dev/null
+fi
+
+cp $regdir/Main/Makefile_PGI $regdir/Main/Makefile_PGI3
+cp $regdir/Main/Makefile_PGI $regdir/Main/Makefile_PGI5
+cp $regdir/PreProc/Terrain/Makefile_$recons $regdir/PreProc/Terrain/Makefile
+cp $regdir/PreProc/ICBC/Makefile_$recons $regdir/PreProc/ICBC/Makefile
+cp $regdir/Main/Makefile_$recons $regdir/Main/Makefile 
+echo
+echo -e "\t Write the name (full path) of the directory in which the data are"
+echo -e "\t example: /volume/datasets/regcm/SURFACE"
+echo -e "SURFACE: \c" ; read datasurface
+echo -e "SST: \c"     ; read datasst
+echo -e "NNRP1: \c"   ; read dataNNRP1
+echo -e "NNRP2: \c"   ; read dataNNRP2
+echo -e "ERA40: \c"   ; read dataera40
+echo -e "Do you want to link addition directory (y/n): \c" ; read linkques 
+if [ "$linkques" = "y" ];then
+echo -e "Write the name of the dataset(FVGCM, ECHAM etc.): \c" ; read nameADD
+echo -e "Write the full path of the directory in which the your addtional data are"
+read dataADD
+mkdir $regdir/PreProc/DATA/$nameADD >& /dev/null
+echo "$dataADD/*  $regdir/$nameADD/."
+/bin/ln -sf $dataADD/*  $regdir/PreProc/DATA/$nameADD/. >& /dev/null
+fi
+
+mkdir $regdir/PreProc/DATA/SURFACE >& /dev/null
+/bin/ln -sf $datasurface/* $regdir/PreProc/DATA/SURFACE/.
+mkdir $regdir/PreProc/DATA/SST >& /dev/null
+/bin/ln -sf $datasst/* $regdir/PreProc/DATA/SST/.
+mkdir $regdir/PreProc/DATA/NNRP1 >& /dev/null
+/bin/ln -sf $dataNNRP1/* $regdir/PreProc/DATA/ECWCRP/.
+mkdir $regdir/PreProc/DATA/NNRP2 >& /dev/null
+/bin/ln -sf $dataNNRP2/* $regdir/PreProc/DATA/NNRP2/.
+mkdir $regdir/PreProc/DATA/ERA40 >& /dev/null
+/bin/ln -sf $dataera40/* $regdir/PreProc/DATA/ERA40/. >& /dev/null
+}
+
+#
+#Terrain Part starts
+#
+terrain()
+{
+recons=1
+while [ $recons -eq 1 ]
+do
+echo
+echo -e "\t||||||||||||||||||||||||||"
+echo -e "\t|------TERRAIN PART------|"
+echo -e "\t||||||||||||||||||||||||||"    
+echo
+echo -e "Define Center point of the model domain" 
+echo -e "Latitude(-90.:90.): \c" ;read lat
+echo -e "Longitude(-180.:180.): \c" ;read lon
+echo -e "Number of grid points along the x direction(jx): \c" ;read x 
+echo -e "Number of grid points along the y direction(iy): \c" ;read y 
+echo -e "Model Resolution(km): \c" ;read res 
+echo -e "Vertical Sigma Levels(14,18,23): \c" ; read lev
+echo -e "Define Map Projection" 
+echo -e "Lambert Conformal : LAMCON"
+echo -e "Polar Sterographic: POLSTR" 
+echo -e "Normal Mercator   : NORMER" 
+echo -e "Rotated Mercator  : ROTMER"
+echo -e "Enter: \c" ; read proj
+echo -e "Select Global analysis dataset (ECMWF, NNRP1, NNRP2, ERA40, FVGCM, FNEST): \c" ; read datas
+echo -e "Selcet SST dataset(OISST, GISST, OI_NC, OI_WK, RF, A2, B2): \c" ; read sstdatas
+echo -e "Beginning and ending dates of your simulation(example: 1994070100)"
+echo -e "Begin: \c" ; read date1
+echo -e "End  : \c" ; read date2
+
+sed -e '68c\      parameter(iproj='\'$proj\'')' -e '71c\      parameter(iy='$y')' -e '72c\      parameter(jx='$x')' -e '73c\      parameter(kz='$lev')' -e '76c\      parameter(ds='$res')' -e '79c\      parameter(clat='$lat')' -e '80c\      parameter(clon='$lon')' -e '102c\      parameter(IDATE1='$date1')' -e '103c\      parameter(IDATE2='$date2')' -e '104c\      parameter(DATTYP='\'$datas\'')' -e '105c\      parameter(SSTTYP='\'$sstdatas\'')' PreProc/Terrain/domain.param > domain.param2
+echo $date1 > date
+lastdate=`cat date`
+cp -f domain.param2 PreProc/Terrain/domain.param
+rm domain.param2 >& /dev/null
+rm $regdir/Input/DOMAIN.* >& /dev/null
+cd $regdir/PreProc/Terrain
+export F_UFMTENDIAN=big
+./terrain.x
+cd $regdir/Input/
+checkter=`ls DOMAIN.INFO`
+if [ "$checkter" != "DOMAIN.INFO" ]; then
+echo
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo -e "\t !!! Error occured !!! Error occured !!! Error occured !!!" 
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo
+exit
+fi
+cd $regdir
+#drawing domain
+echo \'open Input/DOMAIN.CTL\' > domaingraph.gs
+echo \'set display color white\' >> domaingraph.gs
+echo \'set gxout  shaded\' >> domaingraph.gs
+echo \'d ht\' >> domaingraph.gs
+echo \'draw title Model Domain\' >> domaingraph.gs
+echo \'printim gifdomain.gif gif white\' >> domaingraph.gs
+echo \'quit\' >> domaingraph.gs
+gradsc -blc "run domaingraph.gs"
+gqview gifdomain.gif &
+echo -e "Do you want to re-define your domain?(Yes=1; No=2): \c" ; read recons 
+done
+}
+
+#
+#creating ICBC 
+#
+icbc()
+{
+echo
+echo -e "\t||||||||||||||||||||||||||"
+echo -e "\t|-------ICBC  PART-------|"
+echo -e "\t||||||||||||||||||||||||||"    
+echo
+lastdate=`cat /$regdir/date`
+rm $regdir/Input/ICBC* 2> /dev/null
+cd $regdir/PreProc/ICBC
+echo
+echo  "\t!!!Preparing initial and bounday conditions!!!" 
+echo
+./icbc.x
+cd $regdir/Input
+checkicbc=`ls ICBC$lastdate`
+if [ "$checkicbc" != "ICBC$lastdate" ]; then
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo -e "\t !!! Error occured !!! Error occured !!! Error occured !!!" 
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+exit
+fi
+cd $regdir
+}
+
+#
+# Running RegCM
+#
+# ./dene | Xdialog --gauge "RegCM is running now!" 10 40 0 
+runregcm()
+{
+cd $regdir
+echo
+echo -e "\t||||||||||||||||||||||||||"
+echo -e "\t|--------RUN MODEL-------|"
+echo -e "\t||||||||||||||||||||||||||"    
+echo
+lastdate=`cat /$regdir/date`
+echo
+echo -e "Write the name of the directory in which simulation is going to run: \c" ; read rundir
+mkdir $rundir
+cd $regdir/$rundir
+cp ../Commons/regcm.in .
+vi regcm.in 	
+echo
+echo  "Do you want to run simulation? (run,exit)" ; read runexit 
+`echo $runexit` >& /dev/null
+starttime=`date +%A%t%T`
+cd ../Main
+make clean
+make
+cd -
+mv ../Main/regcm .
+/bin/ln -sf ../Input/DOMAIN.INFO fort.10
+/bin/ln -sf    ../Input/ICBC$lastdate fort.101
+./regcm < regcm.in
+stoptime=`date +%A%t%T`
+echo
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo -e "\t                    SIMULATION FINISHED                   " 
+echo -e "\t                    start: $starttime                     "
+echo -e "\t                    stop : $stoptime                      "
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo
+}
+
+runrestart()
+{
+echo
+echo -e "\t||||||||||||||||||||||||||"
+echo -e "\t|---RESTART SIMULATION---|"
+echo -e "\t||||||||||||||||||||||||||"
+echo
+echo -e "Beginning and ending dates of your restart simulation"
+echo -e "Begin: \c" ; read d1
+echo -e "End  : \c" ; read d2
+echo -e "Write the name of the directory in which restart simulation is going to run(it should has a same name as previous run directory)"
+echo -e "Enter: \c" ; read restartdir
+sed -e '25c\      parameter(IDATE1='$d1')' -e '26c\      parameter(IDATE2='$d2')' PreProc/ICBC/icbc.param > icbc.param2
+
+cp icbc.param2 $regdir/PreProc/ICBC/icbc.param
+cd $regdir/PreProc/ICBC
+rm Input/ICBC$d1* >& /dev/null
+rm  icbc.param2 >& /dev/null
+./icbc.x
+
+vi $regdir/$restartdir/regcm.in
+echo  "Do you want to run restart simulation? (run,exit)" ; read runexit	
+`echo $runexit` >& /dev/null
+starttime=`date +%A%t%T`
+cd $regdir/$restartdir
+ln -sf output/SAV.$d1 fort.14
+ln -sf ../Input/ICBC$d1 fort.101
+./regcm < regcm.in
+stoptime=`date +%A%t%T`
+echo
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo -e "\t                    SIMULATION FINISHED                   "
+echo -e "\t                    start: $starttime                     "
+echo -e "\t                    stop : $stoptime                      "
+echo -e "\t !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo
+}
+echo
+echo -e "\t\t #######################" 
+echo -e "\t\t #                     #" 
+echo -e "\t\t # -RegCM3 SIMULATION- #"
+echo -e "\t\t #                     #" 
+echo -e "\t\t #######################" 
+echo 
+echo -e "\n\t Which part do you want to start from?"
+echo
+echo "1 From the Beginning" 
+echo "2 Terrain Part" 
+echo "3 ICBC Part" 
+echo "4 Run Model" 
+echo "5 Restart Simulation" 
+echo -e "Enter: \c"
+read whichpart
+
+case $whichpart in
+
+1)
+linkdata
+terrain
+icbc
+runregcm
+;;
+2)
+terrain
+icbc
+runregcm
+;;
+3)
+icbc
+runregcm
+;;
+4)
+runregcm
+;;
+5)
+runrestart
+;;
+esac
+echo
+#echo "#----------------easyRegcm Version 0.0.1 Sep 20 2005-----------------#"
+#echo "######################################################################"  
+#echo "#                                                                    #"
+#echo "#      _/  _/_/_/_/  _/    _/   Baris ONOL                           #" 
+#echo "#            _/                 Istanbul Technical University        #"
+#echo "#    _/     _/     _/    _/     Aeronautics and Astronautics Faculty #"
+#echo "#   _/     _/     _/    _/      Department of Meteorology            #" 
+#echo "#  _/     _/     _/_/_/_/       Maslak / Istanbul                    #"
+#echo "#                               e-mail: onolba@itu.edu.tr            #"
+#echo "#                                                                    #"
+#echo "#                               Copyleft (c) \"long live GNU\"         #"
+#echo "#                                                                    #"
+#echo "######################################################################"
+#echo

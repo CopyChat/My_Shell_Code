@@ -1,0 +1,55 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: killapp
+# 
+USAGE="./killapp + app name "
+# 
+#   DESCRIPTION:  
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), chao.tang.1@gmail.com
+#  ORGANIZATION: le2p
+#       CREATED: 09/14/2014 21:47:02 RET
+#      REVISION:  ---
+#===============================================================================
+
+#set -o nounset                             # Treat unset variables as an error
+shopt -s extglob 							# "shopt -u extglob" to turn it off
+source ~/Shell/functions.sh      			# TANG's shell functions.sh
+
+#=================================================== 
+
+while getopts ":t" opt; do
+    case $opt in
+        t) TEST=1 ;;
+    \?) echo $USAGE && exit 1
+esac
+done
+
+shift $(($OPTIND - 1))
+#============================================
+
+#echo $#
+
+    case $# in
+        0)
+            echo "to KILL which program ⚔ ??? " 
+            color 1 7 "✄===✄===✄====✄====✄====✄====✄===✄=" 
+            read a
+            #pname=`ps -ef | grep $1 |grep -v grep | awk '{print   $2}'` 
+            ps -ef | grep $a |grep -v grep | awk '{print $2}' | xargs kill -9
+            ;;
+        1)
+            a=$1
+            ps -ef | grep $a |grep -v grep | awk '{print $2}' | xargs kill -9
+            ;;
+        \?)
+            echo $USAGE $$ exit 1
+    esac
+
+
+    echo "ps -ef | grep $a |grep -v grep | awk '{print $2}' | xargs kill -9"

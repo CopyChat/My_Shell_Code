@@ -1,0 +1,10 @@
+#!/bin/bash
+# scriptname bac
+# use to add the line number from the default input 
+nl -n ln >> temp_add_line_number
+#echo '-----------------------------------------'
+#tail -5 ~/software/backuprecord3.c
+#echo '-----------------------------------------'
+cat temp_add_line_number
+rm temp_add_line_number
+#echo '-----------------------------------------'

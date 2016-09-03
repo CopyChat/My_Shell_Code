@@ -1,0 +1,40 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: average
+# 
+#         USAGE: ./average 
+# 
+#   DESCRIPTION: to calculate the average of a particular column from a 2d table  
+# 		 usage : $ average filename line: average x.dat 4
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/12/12 23:52:30 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+set -x
+
+if [ -d $1 ] # :WARNING:10/13/12 00:09:47 CST:Tang: it not works well
+then
+	echo testing
+else
+	echo no input file ...
+	echo "average inputfile [ num_of_column ]"
+fi
+cat $1 | awk '{if($0!="")print}' > temptemp
+if [ -d $2 ] # :NOTE:10/12/12 23:54:35 CST:Tang: if specify the column number
+then
+	cat temptemp | awk '{a+=$1}END{print a/NR}' # :IF:10/12/12 23:56:02 CST:Tang: if $2=null
+else
+	cat temptemp | awk '{a+=$'$2'}END{print a/NR}'
+fi
+rm temptemp # :NOTE:10/12/12 23:56:47 CST:Tang: delete the temp file
+
+#echo [tangchao90908@sina.com-------100%done]

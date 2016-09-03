@@ -1,0 +1,16 @@
+#!/bin/bash
+# scriptname cpto
+echo "--------------------------------------"
+#echo "cp to tangchao@202.121.49.52:~/..." for kla 
+echo "cp to ctang@ccur.univ-reunion.fr:~/ ... " for le2p
+echo "--------------------------------------"
+ls -A
+echo "--------------------------------------"
+read a
+echo "--------------------------------------"
+echo "OK,but where ?"
+echo "--------------------------------------"
+read b
+echo "--------------------------------------"
+#scp $a tangchao@202.121.49.52:~/$b
+scp -C $a ctang@ccur.univ-reunion.fr:~/$b

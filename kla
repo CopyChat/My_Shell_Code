@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+# scriptname kla
+# to connect to the KLA server
+set timeout -1
+spawn ssh -X tangchao@202.121.49.52
+expect "*password:*"
+send "jing90908s\n"
+interact
+

@@ -1,0 +1,38 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: alert
+# 
+#         USAGE: ./alert 
+# 
+#   DESCRIPTION: to creat a window and sent message 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/12/12 23:46:55 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+message="$@"
+osascript<<EOF
+
+tell application "Finder" # :NOTE:10/12/12 23:48:12 CST:Tang: call finder
+	activate
+	display Dialog "$message"
+end tell
+
+EOF
+
+# 结束
+
+# 调用方法：保存成 ~/bin/alert 文件
+# 在终端执行
+# 例如：
+#alert your_message
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+# to change the *.jpg files into i.jpg, where i is Arabic number from 1
+i=1
+for file in *.mp3
+do
+	echo $file
+    mv $file ${i}.mp3
+	((i++))
+done
+echo -----------------------------------
+echo [tangchao90908@163.com---100%done]

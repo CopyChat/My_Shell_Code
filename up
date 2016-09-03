@@ -1,0 +1,28 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: up
+# 
+#         USAGE: ./up 
+# 
+#   DESCRIPTION: open my hp u-disk 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/07/12 10:07:09 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+# scriptname up
+cd /Volumes/hp_v220w/
+echo "--------------------------------------"
+ls
+echo "--------------------------------------"
+pwd
+echo "======================================"

@@ -1,0 +1,57 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: z2dm
+# 
+#         USAGE: ./z2dm 
+# 
+#   DESCRIPTION: to give the distance model of flat universe
+# 				form the input redshift $1 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: --- ~/astro/distance/comoving.dat
+#          BUGS: ---
+#         NOTES: --- h=0.71,OmigaL=0.73,Omigam=0.27
+#         NOTES: --- h=0.71,OmigaL=0.7,Omigam=0.3 z2dm2
+#         NOTES: --- h=1,OmigaL=0.7,Omigam=0.3 z2dm3
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 12/25/12 17:57:57 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+
+if [ $# -lt 1 ]; then
+	echo "please input the redshift"
+	exit 1
+fi
+
+z=$(echo "" | awk '{printf "%6.5f\n",'$1'}') # set the accuracy : 10^-5
+line=$(echo "" | awk '{printf "%s\n",1e+5*'$z'}')
+
+if [ $line -gt 1000000 ]; then
+	echo "please input a redshift < 10"
+	exit 1
+fi
+
+awk 'NR=='$line'{printf "%s\n", 5*(log(1e+6*$2*(1+$1))/log(10))-5}' ~/astro/distance/comoving3.dat
+
+#awk '$1=='$z'{print $2}' ~/astro/distance/comoving.dat
+
+
+
+exit
+
+
+
+awk 'NR==FNR{a[$'$c']=$'$c'}NR!=FNR{if($'$c'=a[$'$c'])print $0}' $1 $2
+exit
+#======================= my old code
+i=1
+for id in $(awk '{print $'$c'}' $2)
+do
+	awk '$'$c'=='$id'' $1
+	((i++))
+done
