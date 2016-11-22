@@ -44,7 +44,7 @@ cdo ymonmean temp3.temp ${infile%.nc}.$YEARstart-$YEARend.ymon.mean.MJJASO.nc
 
 color 1 7 "done ======================"
 rm temp?.temp
-ls -lhrt *.temp
+ls -lhrt *.nc
 
 
 
