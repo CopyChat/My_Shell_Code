@@ -31,16 +31,16 @@ while getopts ":d:y:t" opt; do
 done
 shift $(($OPTIND - 1))
 
-infile=$1;YEARend=$(( $YEARstart + $Duree ))
+infile=$1;YEARend=$(( $YEARstart + $Duree - 1))
 #=================================================== 
 
 cdo selyear,$(eval seq -s "," $YEARstart $YEARend) $infile temp1.temp
 
 cdo selmon,1,2,3,4,11,12 temp1.temp temp2.temp
-cdo ymonmean temp2.temp $infile.ymon.mean.NDJFMA.temp
+cdo ymonmean temp2.temp ${infile%.nc}.$YEARstart-$YEARend.ymon.mean.NDJFMA.nc
 
 cdo selmon,5,6,7,8,9,10 temp1.temp temp3.temp
-cdo ymonmean temp3.temp $infile.ymon.mean.MJJASO.temp
+cdo ymonmean temp3.temp ${infile%.nc}.$YEARstart-$YEARend.ymon.mean.MJJASO.nc
 
 color 1 7 "done ======================"
 rm temp?.temp
