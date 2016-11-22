@@ -1,0 +1,79 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: gradsmap
+# 
+#         USAGE: ./gradsmap
+# 
+#   DESCRIPTION: to call grads & plot the $var in the $ifile
+#       OPTIONS: --- $1: ifile; $2: var; $3: month
+#  REQUIREMENTS: --- stdmap.gs in ~/GrADS
+#          BUGS: --- sometimes you have to run GrADSNcPrepare 
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 04/03/2013 13:10:45 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+if [ $# -lt 3 ]; then
+	echo "Useage: gradss + variable + infile + month (1~12)"
+	exit
+fi
+var=$1
+ifile=$2.ctl
+month=$3
+
+pathgs=~/Plot/GrADS/stdmap.gs
+
+cd $(pwd)
+
+GrADSNcPrepare $2
+
+#================= change directory
+nn=$(echo $2 | awk -F '/' '{print NF}')
+echo $nn
+if [ $nn -lt 2 ]; then
+	cd $(pwd)
+else
+	dir=$(echo $2 | awk -F '/' '{for(i=1;i<NF;i++) printf $i"/";printf "\n"}' )
+	cd $dir
+fi
+#=================================================== 
+
+
+if [ $var = "pr" ]; then
+	cat  $pathgs | awk '{gsub(/varName90908/,"'$var'");\
+		gsub(/ifile90908/,"'$ifile'");gsub(/month90908/,"'$month'");\
+		gsub(/title90908/,"precip (mm/day)");\
+		gsub(/colorlevels90908/,"1 2 4 8 12 16 20 24");\
+		gsub(/factor90908/,"*86400");print}' > stdmap.temp.gs
+else
+	if [ $var = "tas" ]; then
+
+		cat  $pathgs | awk '{gsub(/varName90908/,"'$var'");\
+			gsub(/ifile90908/,"'$ifile'");gsub(/month90908/,"'$month'");\
+			gsub(/title90908/,"'$var' T2m (Celsius degree)");\
+			gsub(/colorlevels90908/,"15 18 20 22 24 26 28 30 32");\
+			gsub(/factor90908/,"-273.15");print}' > stdmap.temp.gs
+	else
+		cat  $pathgs | awk '{gsub(/varName90908/,"'$var'");\
+			gsub(/ifile90908/,"'$ifile'");gsub(/month90908/,"'$month'");\
+			gsub(/title90908/,"'$var'");\
+			gsub(/factor90908/,"*1");print}' > stdmap.temp.gs
+	fi
+fi
+
+#head -35 stdmap.temp.gs
+
+echo $var $ifile $month
+echo "--------------------------------------"
+grads -lbc "run stdmap.temp.gs"
+#rm map.$var.$month.gmf stdmap.temp.gs
+#killall Preview
+open map.$var.$month.eps
+echo "--------------------------------------"
+echo output: map.$var.$month.eps
+exit

@@ -1,0 +1,72 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: setmodel.sh
+# 
+USAGE="setmodeldir [ -n job_name] namelist.in"
+# 
+#   DESCRIPTION:  
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), chao.tang.1@gmail.com
+#  ORGANIZATION: le2p
+#       CREATED: 02/17/16 16:02:21 CET
+#      REVISION:  ---
+#===============================================================================
+
+#set -o nounset                             # Treat unset variables as an error
+shopt -s extglob 							# "shopt -u extglob" to turn it off
+source ~/Code/My_Shell_Code/functions.sh      			# TANG's shell functions.sh
+
+TEST=0;job="job_name";RADIATION=0;
+#=================================================== 
+    while getopts ":trn:" opt; do
+        case $opt in
+            t) TEST=1 ;;
+            n) job="$OPTARG" ;;
+            r) RADIATION=1 ;;
+            \?) echo $USAGE 
+        esac
+    done
+
+    shift $(($OPTIND - 1))
+#=================================================== 
+#=================================================== 
+## to set up working dir for regcm 
+
+    if [ $RADIATION = "1" ]; then
+        RCMDIR="/Users/ctang/climate/RegCM/RegCM-4.5.0"
+        echo RADIATION=$RADIATION
+    else
+        RCMDIR="/Users/ctang/climate/RegCM/RegCM-4.5.0"
+        echo RADIATION=$RADIATION
+    fi
+
+    RCMDATADIR="/Users/ctang/climate/GLOBALDATA"
+    MODELDIR="/Users/ctang/climate/Modeling"
+    RRTMDIR="/Users/ctang/climate/RegCM/RegCM-4.5.0/Testing/RRTM_DATA"
+
+    cd $MODELDIR
+
+    Modeling=${1:?Name of the modeling directory?}
+    color -n 1 7 "Set modeling dir: "; color 7 1 " $MODELDIR/$Modeling "
+
+
+    mkdir -p $MODELDIR/$Modeling
+
+    cd $MODELDIR/$Modeling
+
+    ln -sf $RCMDATADIR ./RCMDATA
+    ln -sf $RCMDIR/bin ./
+    ln -sf $RRTMDIR/* ./
+
+    mkdir -p input output
+
+    echo '-----------------------------------------------------------'
+    echo  "to prepare starting a SBATCH MPI job, please use command:"; 
+    color 2 "setmodel [ -n job_name ] + namelist.in"; 
+    echo "scripts will be copy to current directory."
+    echo ""
