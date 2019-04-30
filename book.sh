@@ -71,7 +71,7 @@ shopt -s extglob
 #ls !(vt+([0-9]))
 #ls @(alice|hatter|hare) #would only match alice, hatter, or hare.
 #ls !(alice|hatter|hare) #matches everything except alice, hatter, and hare.
-ls @(kil*|sm*)
+#ls @(kil*|sm*)
 #=================================================== 
 Start=${1:-1979};End=${2:-1983} 		#  default
 
@@ -115,5 +115,6 @@ exit 0
 for ((i=0;i<$SEND_THREAD_NUM;i++));do 
 #=================================================== 
 shopt -s extglob
-rm !(*196101-2005*)
-ls  $PWD/*
+#rm !(*196101-2005*)
+#ls  $PWD/*
+done

@@ -19,7 +19,7 @@
 set -o nounset                              # Treat unset variables as an error
 
 
-awk -f /Users/tang/Shell/transpose.awk $1
+awk -f /Users/ctang/Code/Shell/transpose.awk $1
 exit
 
 

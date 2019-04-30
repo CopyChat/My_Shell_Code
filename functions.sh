@@ -30,7 +30,6 @@ function show
 	echo $#: $0 $@
 }
 
-
 #---  FUNCTION  ----------------------------------------------------------------
 #          NAME:  color
 #   DESCRIPTION:  echo text with colors
@@ -499,8 +498,51 @@ function swio()
 }
 function swio2()
 {
-    cdo sellonlatbox,3,107,-3,-37 $1 ${1%.nc}.swio.nc
+    cdo sellonlatbox,4,104,-4,-37 $1 ${1%.nc}.swio.nc
 }
+function cordex_SA()
+{
+    cdo sellonlatbox,-0.1,60,-0.2,-40 $1 ${1%.nc}.SA.nc
+}
+function cordex_SA1()
+{
+    cdo sellonlatbox,-0.1,60,-0.05,-40 $1 ${1%.nc}.SA.nc
+}
+function cordex_SA2()
+{
+    cdo sellonlatbox,-0.1,60,0.01,-40 $1 ${1%.nc}.SA.nc
+}
+function SA()
+{
+    cdo sellonlatbox,3,61,-3,-37 $1 ${1%.nc}.SA.nc
+}
+function RUN()
+{
+    cdo sellonlatbox,54.9,56,-20.5,-21.5 $1 ${1%.nc}.RUN.nc
+
+    # La Reunion: (-20.876,-21.38,55.19,55.87)
+
+    #applied to AFR-44, will resulting the following point
+    #: points=6 (3x2)
+    #lon : 55 to 55.88 degrees_east
+    #lat : -21.12 to -20.68 degrees_north
+
+}
+function MAU()
+{
+
+    cdo sellonlatbox,57.2,58,-19.5,-20.8 $1 ${1%.nc}.MAU.nc
+
+    # Mau in (-19.93,57.26;-20.55,57.86) box.
+
+    #applied to AFR-44, will resulting the following point
+    #Grid coordinates :
+    #points=6 (2x3)
+    #lon : 57.2 to 57.64 degrees_east  circular
+    #lat : -20.68 to -19.8 degrees_north
+}
+
+
 #===================================================  do not work
 function dockdely()
 {
@@ -574,3 +616,34 @@ function twb()
     echo '--------------------------------'
     echo "cat ~/.mycode"
 }
+#=================================================== apple:
+# to quit a app gracefully
+#osascript -e 'quit app "Microsoft Excel"'
+
+# to list all running app by cpu:
+#top -o CPU
+
+# by memory
+#top -o rsize
+
+# same but more detials
+#ps aux | more
+
+# Opening Mac OS X Applications from the Command Line
+#open -a "Mail"
+
+
+function s2imac()
+{
+
+	color -n 1 7 "backing up file:  "
+    color 7 1 "/Users/ctang/Microsoft_OneDrive/OneDrive/CODE/Prediction_PV..."
+    rsync -arvuhSPH /Users/ctang/Microsoft_OneDrive/OneDrive/CODE/Prediction_PV/ le2p@10.243.6.78:~/Prediction_PV
+}
+
+
+
+
+
+
+

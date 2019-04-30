@@ -19,4 +19,4 @@
 
 set -o nounset                              # Treat unset variables as an error
 
-awk '{for (i=1;i<NF;i++){printf "%s ",$i};print $NF}' $1
+awk -F "," '{for (i=1;i<NF;i++){printf "%s ",$i};print $NF}' $1

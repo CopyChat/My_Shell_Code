@@ -46,6 +46,7 @@ while getopts ":talhiMmspS" opt; do
         m) MEAN=1 ;;
         h) echo $USAGE; echo $options && exit 1;;
         s) STD=1 ;;
+        S) SUM=1 ;;
         p) POSSION_ERR=1 ;;
         \?) echo $USAGE && exit 1
         esac
@@ -104,7 +105,8 @@ lines=$(wc $inputfile | awk '{print $1}')
                 #echo column=$column
                 #echo c=$i
                 mean=$(awk '{sum+=$'$c'} END {print sum/NR}' $inputfile)
-                awk '{sum+=('$mean'-$'$c')*('$mean'-$'$c')} END {printf "%f ", sqrt(sum/((NR-1)*NR))}' $inputfile
+                awk '{sum+=('$mean'-$'$c')*('$mean'-$'$c')} END {printf "%f ", sqrt(sum/NR)}' $inputfile
+                #awk '{sum+=('$mean'-$'$c')*('$mean'-$'$c')} END {printf "%f ", sqrt(sum/((NR-1)*NR))}' $inputfile
             done
             echo "" 
         fi

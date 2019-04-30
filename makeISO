@@ -1,0 +1,28 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: back
+# 
+#         USAGE: ./back 
+# 
+#   DESCRIPTION: back to the backup file backuprecord_2014.c in ~/software 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED:    Thu Mar 16 18:54:37 RET 2017
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+
+
+output_iso=${1:?"give output_iso and input_path"}
+input_path=${2:?"give output_iso and input_path"}
+
+hdiutil makehybrid -iso -joliet -o $output_iso $input_path
+
+echo 'all the work is ---------- 100% done !!!'

@@ -1,0 +1,19 @@
+#!/bin/bash
+# scriptname cpto
+echo "--------------------------------------"
+#echo "cp to tangchao@202.121.49.52:~/..." for kla 
+echo "cp to ctang@titan.univ.run:~/ ... " for le2p
+#echo "cp to ctang@titan.univ.run:~/ ... " for le2p
+echo "--------------------------------------"
+ls -A
+echo "--------------------------------------"
+read a
+echo "--------------------------------------"
+echo "OK,but where ?"
+echo "--------------------------------------"
+read b
+echo "--------------------------------------"
+#scp $a tangchao@202.121.49.52:~/$b
+echo "rsync -arzHPS $a ctang@titan.univ.run:~/$b"
+#rsync -arzHPS $a ctang@titan.univ.run:~/$b
+rsync -arzHPS $a ctang@10.82.80.222:~/$b

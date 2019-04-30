@@ -1,0 +1,25 @@
+#!/bin/bash - 
+#===============================================================================
+#
+#          FILE: back
+# 
+#         USAGE: ./back 
+# 
+#   DESCRIPTION: back to the backup file backuprecord_2014.c in ~/software 
+# 
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
+#        AUTHOR: Tang (Tang), tangchao90908@sina.com
+#  ORGANIZATION: KLA
+#       CREATED: 10/07/12 10:14:50 CST
+#      REVISION:  ---
+#===============================================================================
+
+set -o nounset                              # Treat unset variables as an error
+dir="/Users/ctang/Microsoft_OneDrive/OneDrive/Software/"
+
+file="/Users/ctang/Microsoft_OneDrive/OneDrive/Software/backuprecord_2017.c"
+
+echo $file

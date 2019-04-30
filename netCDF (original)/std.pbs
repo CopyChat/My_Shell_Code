@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N name90908
+#PBS -o regcm_name90908.out
+#PBS -e regcm_name90908.err
+#PBS -l walltime=24:00:00
+#PBS -l select=4:ncpus=8:mpiprocs=8:mem=20Gb:bigcpu=0
+#PBS -q routingq
+#PBS -M chao.tang@univ-reunion.fr
+#PBS -m ae
+#PBS -V
+
+echo $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+cat $PBS_NODEFILE
+
+which regcmMPI_exe
+
+ulimit -s unlimited
+
+namelist=namelist90908
+
+
+#terrain $namelist
+#clm2rcm $namelist
+#cp $REGCM_GLOBEDAT/CLM/pft-physiology.c070207 input/
+#sst $namelist
+#icbc $namelist
+
+mpirun -np 32 regcmMPI_exe $namelist > runlog.$namelist 2>&1
+
+
