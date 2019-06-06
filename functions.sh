@@ -642,6 +642,17 @@ function s2imac()
 }
 
 
+function datetimelist()
+# use only format in YYYYMMDD
+{
+    startt=$1
+    endtime=$2
+    #exit
+    until [[ $startt > $endtime  ]]; do
+        echo "$startt"
+        startt=$(date -d "$startt + 1 day" +'%Y%m%d')
+    done
+}
 
 
 
