@@ -1,25 +1,38 @@
 #!/bin/bash - 
-#===============================================================================
+#======================================================
 #
 #          FILE: loop.sh
 # 
-USAGE= " ./loop.sh  "
+USAGE="./loop.sh"
 # 
-#   DESCRIPTION:  
+#   DESCRIPTION: run commander in every $1 seconds
 # 
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
-#          BUGS: ---
+#          BUGS: --- unknown
 #         NOTES: ---
-#        AUTHOR: Tang (Tang), chao.tang.1@gmail.com
-#  ORGANIZATION: le2p
-#       CREATED: 03/28/2014 11:18:15 RET
-#      REVISION:  ---
-#===============================================================================
+#        AUTHOR: |CHAO.TANG| , |chao.tang.1@gmail.com|
+    #  ORGANIZATION: 
+#       CREATED: 06/06/19 16:11
+#      REVISION: 1.0
+#=====================================================
+set -o nounset           # Treat unset variables as an error
+. ~/Shell/functions.sh   # ctang's functions
 
-#set -o nounset                             # Treat unset variables as an error
-shopt -s extglob 							# "shopt -u extglob" to turn it off
-source ~/Shell/functions.sh      			# TANG's shell functions.sh
-
+while getopts ":tf:" opt; do
+    case $opt in
+        t) TEST=1 ;;
+        f) file=$OPTARG;;
+        \?) echo $USAGE && exit 1
+    esac
+done
+shift $(($OPTIND - 1))
 #=================================================== 
+sleep=$1
+
+while :
+do
+    ~/software/Python-3.7.3/python clt_MeteoFrance.py -t >> clt.log 2>&1
+done
+
 
