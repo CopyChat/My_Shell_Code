@@ -28,11 +28,13 @@ while getopts ":tf:" opt; do
 done
 shift $(($OPTIND - 1))
 #=================================================== 
-sleep=$1
+sleep_second=$1
 
+loop=0
 while :
 do
+    echo "===== loop = $loop ====== $(eval date)" >> clt.log
     ~/software/Python-3.7.3/python clt_MeteoFrance.py -t >> clt.log 2>&1
+    sleep $sleep_second
+    ((loop++))
 done
-
-
